@@ -6,5 +6,5 @@ require 'functions.php';
 
 
 
-require 'lessons.view.php';
+require 'index.view.php';
 
