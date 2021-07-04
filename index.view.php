@@ -9,26 +9,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="lessons/style.css">
+    <link rel="stylesheet" href="style.css">
     <title>lessons</title>
 </head>
 <body>
-    
 
-<h1 class="m-5"> Gibbon lessons
-</h1>
+
+
+<h1 class="m-5"> Gibbon lessons</h1>
 <main class="container-fluid">
     <div class="">
 
+    
+  
     
     <div class="">
 
 <?php if ($_SERVER["REQUEST_METHOD"] !== "POST") : ?>
 
-    <form action="../lessons/index.php" method="POST" class="m-5">
+    <form action="index.php" method="POST" class="m-5">
     <h3> Add new lesson </h3>
         <div class="form-group">
-        <label for="name">Week:</label> <!--needs to be ranged -->
+            <label for="name">Week:</label> <!--needs to be ranged -->
             <input type="text"  name="week" required><br>
             <label for="name">Name:</label>
             <input type="text"  name="name" required><br>
@@ -42,12 +44,13 @@
             <button type="submit" value="submit lesson">Save lesson</button>
         </div>
     </form>
-<?php elseif ($_SERVER["REQUEST_METHOD"] == "POST") : ?>
+<?php elseif ($_SERVER['REQUEST_METHOD'] == 'POST') : ?>
 
-   <?php  
+   <?php
+   #var_dump($_POST);
    $makelesson = new Lesson($_POST['week'],$_POST['name'], $_POST['focus'], $_POST['source']);
    $makelesson->scoreLesson($_POST['score']);
-   $lessonsWeekOne[] = $makelesson;
+   lessonToDB($makelesson);
    ?>
    <h3 class="m-5">Added new lesson!</h3>
 
@@ -66,13 +69,11 @@
             <?php
             $writtenNums = ["_","One", 'Two', "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"];
             $weekDesc = "Week $writtenNums[$i]";
-            $weekNum = ${"lessonsWeek" . $i};
-    
-    
+            
             ?>
 
             <h2 class="accordion-header" id="heading<?=$writtenNums[$i]?>">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$writtenNums[$i]?>" aria-expanded="true" aria-controls="<collapse<?=$writtenNums[$i]?>">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$writtenNums[$i]?>" aria-expanded="true" aria-controls="<collapse<?=$writtenNums[$i]?>">
             <?=$weekDesc; ?>
             </button>
             </h2>
@@ -81,7 +82,8 @@
 
             <div id="collapse<?=$writtenNums[$i]?>" class="accordion-collapse collapse" aria-labelledby="heading<?=$writtenNums[$i]?>" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-                    <?php foreach ($weekNum as $lesson) : ?>
+                    <?php $result = $weeks[$i] ?>
+                    <?php foreach ($result as $lesson) : ?>
                         <div  id="lesson">
                             Name: <?=$lesson->name?> <br>
                             Main focus: <?=$lesson->focus?><br>
@@ -95,23 +97,7 @@
                     <?php endforeach;?>
                 </div>
             </div>
-                
-    
-
-    
-
         <?php endfor; ?>
-
-
-
-
-
-        
-            
-   
-
-
-
         </div>
     </div>
 </main>
