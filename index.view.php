@@ -13,13 +13,15 @@
     <title>lessons</title>
 </head>
 <body>
-    
 
-<h1 class="m-5"> Gibbon lessons
-</h1>
+
+
+<h1 class="m-5"> Gibbon lessons</h1>
 <main class="container-fluid">
     <div class="">
 
+    
+  
     
     <div class="">
 
@@ -28,7 +30,7 @@
     <form action="index.php" method="POST" class="m-5">
     <h3> Add new lesson </h3>
         <div class="form-group">
-        <label for="name">Week:</label> <!--needs to be ranged -->
+            <label for="name">Week:</label> <!--needs to be ranged -->
             <input type="text"  name="week" required><br>
             <label for="name">Name:</label>
             <input type="text"  name="name" required><br>
@@ -42,15 +44,13 @@
             <button type="submit" value="submit lesson">Save lesson</button>
         </div>
     </form>
-<?php else : ?>
+<?php elseif ($_SERVER['REQUEST_METHOD'] == 'POST') : ?>
 
-   <?php  
+   <?php
+   #var_dump($_POST);
    $makelesson = new Lesson($_POST['week'],$_POST['name'], $_POST['focus'], $_POST['source']);
    $makelesson->scoreLesson($_POST['score']);
-   $lessonWeek = ${"lessonsWeek" . $_POST['week']};
-   $lessonWeek[] = $makelesson;
-   #lesson is added to the array of lessons for that week, somehow the page won't load it even though it did when working with just one week of lessons earlier.
-   print_r($lessonWeek);
+   lessonToDB($makelesson);
    ?>
    <h3 class="m-5">Added new lesson!</h3>
 
@@ -69,13 +69,11 @@
             <?php
             $writtenNums = ["_","One", 'Two', "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"];
             $weekDesc = "Week $writtenNums[$i]";
-            $weekNum = ${"lessonsWeek" . $i};
-    
-    
+            
             ?>
 
             <h2 class="accordion-header" id="heading<?=$writtenNums[$i]?>">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$writtenNums[$i]?>" aria-expanded="true" aria-controls="<collapse<?=$writtenNums[$i]?>">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$writtenNums[$i]?>" aria-expanded="true" aria-controls="<collapse<?=$writtenNums[$i]?>">
             <?=$weekDesc; ?>
             </button>
             </h2>
@@ -84,7 +82,8 @@
 
             <div id="collapse<?=$writtenNums[$i]?>" class="accordion-collapse collapse" aria-labelledby="heading<?=$writtenNums[$i]?>" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-                    <?php foreach ($weekNum as $lesson) : ?>
+                    <?php $result = $weeks[$i] ?>
+                    <?php foreach ($result as $lesson) : ?>
                         <div  id="lesson">
                             Name: <?=$lesson->name?> <br>
                             Main focus: <?=$lesson->focus?><br>
@@ -98,23 +97,7 @@
                     <?php endforeach;?>
                 </div>
             </div>
-                
-    
-
-    
-
         <?php endfor; ?>
-
-
-
-
-
-        
-            
-   
-
-
-
         </div>
     </div>
 </main>
